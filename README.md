@@ -62,7 +62,6 @@ python scripts/uma_disputes.py compare --out out/disputes_onchain.jsonl
 ```
 
 **Read before running a full scan:**
-- `MOOV2` (`0x2C0367…58B1`, Managed Optimistic Oracle V2) is taken from UMA's docs. The `OOv2` address in the script comes from memory and I could not check it from the sandbox, so run `discover` first. It prints the contract that emitted each sampled dispute, and tells you to pass `--oracle NAME=0xADDR` for any address that is not in the defaults. Requests from 2022 may also have gone through an older oracle contract.
 - A multi-year scan needs many `eth_getLogs` calls. Public RPCs often cap the block range, so a provider with larger ranges is much faster. `--chunk` sets the maximum range.
 - The script reads disputes only. It does not fetch proposals, settlements or the Polymarket market metadata that the raw dataset has.
 
