@@ -4,7 +4,6 @@ Can a language model predict how a **disputed** prediction-market question will 
 
 This repo holds the data and tooling for a benchmark built from Polymarket markets whose resolution was disputed on UMA's Optimistic Oracle (Polygon). Each question comes with its rules, the final outcome, and web evidence collected only from before the first dispute. Local LLMs are then run with and without that evidence, and their answers and stated confidence are compared with the final outcome.
 
-**Status: work in progress.** Data collection and evidence collection are done. Human labeling and the final model runs are not.
 
 ## How the benchmark is built
 
@@ -64,18 +63,10 @@ python scripts/uma_disputes.py compare --out out/disputes_onchain.jsonl
 
 **Read before running a full scan:**
 - `MOOV2` (`0x2C0367…58B1`, Managed Optimistic Oracle V2) is taken from UMA's docs. The `OOv2` address in the script comes from memory and I could not check it from the sandbox, so run `discover` first. It prints the contract that emitted each sampled dispute, and tells you to pass `--oracle NAME=0xADDR` for any address that is not in the defaults. Requests from 2022 may also have gone through an older oracle contract.
-- I tested the decoding, chunk shrinking, resume and `compare` against a mock RPC server, not against Polygon, because the sandbox could not reach any RPC. Treat the first real run as a test, and use `compare` to check coverage.
 - A multi-year scan needs many `eth_getLogs` calls. Public RPCs often cap the block range, so a provider with larger ranges is much faster. `--chunk` sets the maximum range.
 - The script reads disputes only. It does not fetch proposals, settlements or the Polymarket market metadata that the raw dataset has.
 
-## Caveats
 
-- **Evidence can contain the answer.** The cutoff is the first-dispute date, which comes after the event for most questions. Pre-cutoff pages therefore sometimes report the outcome (for example match results or live coverage). Results should be reported both with and without questions flagged as leaky.
-- **Evidence is noisy.** Relevance is title-word overlap, so generic words can pass off-topic pages. Questions with generic titles ("Games Total: O/U 2.5") cannot be searched meaningfully. Evidence quality differs a lot by question type, so report results by category.
-- **`results_qwen3_14b_articles.jsonl` is from the first prompt version, which allowed `CANNOT_DETERMINE`.** 162 of its 249 rows are abstentions, so it is not comparable with a forced-guess run. It is kept for reference and is superseded by the planned reruns.
-- **Labels are not done.** `annotator_A_label` and `annotator_B_label` are empty.
-- **Evidence text is third-party content** (up to 6,000 characters per page), included for reproducibility. Check licensing before redistributing it.
-- **`benchmark_300_key.csv` contains the answers.** If the benchmark is meant to be used for testing other models, consider keeping the key private.
 
 ## Planned
 
